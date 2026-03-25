@@ -73,34 +73,22 @@ def flood_fill(img, row, col, rotulo, T, L, B, R):
     # Verifica se ainda ta na imagem e se ja foi rotulado
     if row >= img.shape[0] or col >= img.shape[1] or row < 0 or col < 0 or img[row, col, 0] != -1:
         return (0, img.shape[0], img.shape[1], -1, -1)
-   
+        
+    # Rotula
     img[row,col, 0] = rotulo
-
-    # Menor row é mais acima
-    T = min(T, row)
-    # Menor col é mais a esquerda
-    L = min(L, col)
-    # Maior row é mais abaixo
-    B = max(B, row)
-    # Maior col é mais a direita
-    R = max(R, col)
-
-    dir = (0, img.shape[0], img.shape[1], -1, -1)
-    esq = (0, img.shape[0], img.shape[1], -1, -1)
-    cima = (0, img.shape[0], img.shape[1], -1, -1)
-    baixo = (0, img.shape[0], img.shape[1], -1, -1)
-
+    
     # Recursão
     dir = flood_fill(img, row, col + 1, rotulo, T, L, B, R)
     esq = flood_fill(img, row, col - 1, rotulo, T, L, B, R)
     cima = flood_fill(img, row - 1, col, rotulo, T, L, B, R)
     baixo = flood_fill(img, row + 1, col, rotulo, T, L, B, R)
-  
+
+    # Atualiza pixels e bordar do arroz
     n_pixels = dir[0] + esq[0] + cima[0] + baixo[0] + 1
-    T = min(T, dir[1], esq[1], cima[1], baixo[1])
-    L = min(L, dir[2], esq[2], cima[2], baixo[2])
-    B = max(B, dir[3], esq[3], cima[3], baixo[3])
-    R = max(R, dir[4], esq[4], cima[4], baixo[4])
+    T = min(row, dir[1], esq[1], cima[1], baixo[1])
+    L = min(col, dir[2], esq[2], cima[2], baixo[2])
+    B = max(row, dir[3], esq[3], cima[3], baixo[3])
+    R = max(col, dir[4], esq[4], cima[4], baixo[4])
     
     return n_pixels, T, L, B, R
 
